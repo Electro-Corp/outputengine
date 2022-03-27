@@ -7,8 +7,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include "shader.h"
-
-
+//#include <WinUser.h>
+#include <Windows.h>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
@@ -34,11 +34,67 @@ const char* vertexShaderSource = "#version 330 core\n"
 "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
 "}\0";
 const char* fragmentShaderSource = "#version 330 core\n" "out vec4 FragColor;\n" "void main()\n"
- "{\n""FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n" "}\n";
+ "{\n""FragColor = vec4(1.0f, 0.9f, 0.2f, 1.0f);\n" "}\n";
+float vertices[] = {
+           -0.9f, -0.9f, -0.9f,  0.0f, 0.0f,
+            0.9f, -0.9f, -0.9f,  1.0f, 0.0f,
+            0.9f,  0.9f, -0.9f,  1.0f, 1.0f,
+            0.9f,  0.9f, -0.9f,  1.0f, 1.0f,
+           -0.9f,  0.9f, -0.9f,  0.0f, 1.0f,
+           -0.9f, -0.9f, -0.9f,  0.0f, 0.0f,
 
+           -0.9f, -0.9f,  0.9f,  0.0f, 0.0f,
+            0.9f, -0.9f,  0.9f,  1.0f, 0.0f,
+            0.9f,  0.9f,  0.9f,  1.0f, 1.0f,
+            0.9f,  0.9f,  0.9f,  1.0f, 1.0f,
+           -0.9f,  0.9f,  0.9f,  0.0f, 1.0f,
+           -0.9f, -0.9f,  0.9f,  0.0f, 0.0f,
+
+           -0.9f,  0.9f,  0.9f,  1.0f, 0.0f,
+           -0.9f,  0.9f, -0.9f,  1.0f, 1.0f,
+           -0.9f, -0.9f, -0.9f,  0.0f, 1.0f,
+           -0.9f, -0.9f, -0.9f,  0.0f, 1.0f,
+           -0.9f, -0.9f,  0.9f,  0.0f, 0.0f,
+           -0.9f,  0.9f,  0.9f,  1.0f, 0.0f,
+
+            0.9f,  0.9f,  0.9f,  1.0f, 0.0f,
+            0.9f,  0.9f, -0.9f,  1.0f, 1.0f,
+            0.9f, -0.9f, -0.9f,  0.0f, 1.0f,
+            0.9f, -0.9f, -0.9f,  0.0f, 1.0f,
+            0.9f, -0.9f,  0.9f,  0.0f, 0.0f,
+            0.9f,  0.9f,  0.9f,  1.0f, 0.0f,
+
+           -0.9f, -0.9f, -0.9f,  0.0f, 1.0f,
+            0.9f, -0.9f, -0.9f,  1.0f, 1.0f,
+            0.9f, -0.9f,  0.9f,  1.0f, 0.0f,
+            0.9f, -0.9f,  0.9f,  1.0f, 0.0f,
+           -0.9f, -0.9f,  0.9f,  0.0f, 0.0f,
+           -0.9f, -0.9f, -0.9f,  0.0f, 1.0f,
+
+           -0.9f,  0.9f, -0.9f,  0.0f, 1.0f,
+            0.9f,  0.9f, -0.9f,  1.0f, 1.0f,
+            0.9f,  0.9f,  0.9f,  1.0f, 0.0f,
+            0.9f,  0.9f,  0.9f,  1.0f, 0.0f,
+           -0.9f,  0.9f,  0.9f,  0.0f, 0.0f,
+           -0.9f,  0.9f, -0.9f,  0.0f, 1.0f
+};
+// world space positions of our cubes
+glm::vec3 cubePositions[] = {
+    glm::vec3(0.0f,  0.0f,  0.0f),
+    glm::vec3(2.0f,  5.0f, -15.0f),
+    glm::vec3(-1.5f, -2.2f, -2.5f),
+    glm::vec3(-3.8f, -2.0f, -12.3f),
+    glm::vec3(2.4f, -0.4f, -3.5f),
+    glm::vec3(-1.7f,  3.0f, -7.5f),
+    glm::vec3(1.3f, -2.0f, -2.5f),
+    glm::vec3(1.5f,  2.0f, -2.5f),
+    glm::vec3(1.5f,  0.2f, -1.5f),
+    glm::vec3(-1.3f,  1.0f, -1.5f)
+};
 int main()
 {
     //glm
+    MessageBox(NULL, "Enter the name of the texture to use (must be in executable loc)", "Output Engine", MB_ICONINFORMATION | MB_OK);
     
     glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
     glm::vec3 cameraDirection = glm::normalize(cameraPos - cameraTarget);
@@ -81,68 +137,14 @@ int main()
     Shader ourShader("4.1.texture.vs", "4.1.texture.sus");
         glEnable(GL_DEPTH_TEST);
     //vertice for triangle
-    float vertices[] = {
-           -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-            0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-            0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-            0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-           -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-           -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+    
 
-           -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-            0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-            0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-            0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-           -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-           -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-
-           -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-           -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-           -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-           -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-           -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-           -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-            0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-            0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-            0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-            0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-            0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-            0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-           -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-            0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-            0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-            0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-           -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-           -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-
-           -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-            0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-            0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-            0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-           -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-           -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
-    };
-    // world space positions of our cubes
-    glm::vec3 cubePositions[] = {
-        glm::vec3(0.0f,  0.0f,  0.0f),
-        glm::vec3(2.0f,  5.0f, -15.0f),
-        glm::vec3(-1.5f, -2.2f, -2.5f),
-        glm::vec3(-3.8f, -2.0f, -12.3f),
-        glm::vec3(2.4f, -0.4f, -3.5f),
-        glm::vec3(-1.7f,  3.0f, -7.5f),
-        glm::vec3(1.3f, -2.0f, -2.5f),
-        glm::vec3(1.5f,  2.0f, -2.5f),
-        glm::vec3(1.5f,  0.2f, -1.5f),
-        glm::vec3(-1.3f,  1.0f, -1.5f)
-    };
     unsigned int indices[] = {
       0, 1, 3, // first triangle
       1, 2, 3  // second triangle
     };
     unsigned int VBO, VAO, EBO;
-    glGenVertexArrays(1, &VAO);
+    /*glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
     glGenBuffers(1, &EBO);
 
@@ -162,11 +164,25 @@ int main()
     glEnableVertexAttribArray(1);
     // texture coord attribute
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-    glEnableVertexAttribArray(2);
+    glEnableVertexAttribArray(2);*/
+    //unsigned int VBO, VAO;
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
 
+    glBindVertexArray(VAO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    // position attribute
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+    // texture coord attribute
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
     // TEXTURE!!!!
     int width, height, nrChannels;
-    unsigned char* data = stbi_load("C:\\users\\cstmp\\pictures\\tux.png", &width, &height, &nrChannels, 0);
+    unsigned char* data = stbi_load("C:\demo\wall.png", &width, &height, &nrChannels, 0);
     unsigned int texture;
     glGenTextures(1, &texture);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -183,6 +199,8 @@ int main()
     else
     {
         std::cout << "Failed to load texture" << std::endl;
+        MessageBox(NULL, "Texture Find Failure.", "Output Engine", MB_ICONERROR | MB_OKCANCEL);
+
     }
 
     stbi_image_free(data);
@@ -265,7 +283,7 @@ int main()
         glm::mat4 view = glm::mat4(1.0f);
         glm::mat4 projection = glm::mat4(1.0f);
         model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-        model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
+        model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.9f, 1.0f, 0.0f));
         const float radius = 10.0f;
         float camX = sin(glfwGetTime()) * radius;
         float camZ = cos(glfwGetTime()) * radius;
@@ -300,18 +318,19 @@ int main()
         // render container
         ourShader.use();
         //glBindVertexArray(VAO);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         glBindVertexArray(VAO);
-        /*for (unsigned int i = 0; i < 10; i++)
+        for (unsigned int i = 0; i < 10; i++)
         {
             glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, cubePositions[i]);
             float angle = 20.0f * i;
-            model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+            model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.9f));
             ourShader.setMat4("model", model);
 
             glDrawArrays(GL_TRIANGLES, 0, 36);
-        }*/
+
+        }
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
         glfwSwapBuffers(window);
@@ -374,4 +393,8 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
     direction.y = sin(glm::radians(pitch));
     direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
     cameraFront = glm::normalize(direction);
+}
+
+int createCube(float x, float y, float width, float height) {
+    return 0;
 }
