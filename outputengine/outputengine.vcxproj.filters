@@ -21,6 +21,9 @@
     <ClCompile Include="..\..\..\..\Desktop\Garage Software\opengl files\glad\src\glad.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source1.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="shader.h">
@@ -39,5 +42,8 @@
     <None Include="4.1.texture.vs" />
     <None Include="HTMLPage.htm" />
     <None Include="4.1.texture.sus" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="..\..\..\..\Downloads\theme.mp3" />
   </ItemGroup>
 </Project>

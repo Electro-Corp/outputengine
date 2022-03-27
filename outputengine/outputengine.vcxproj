@@ -79,7 +79,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <LibraryPath>C:\Users\cstmp\Desktop\Garage Software\opengl files\GLFW\glfw-3.3.6.bin.WIN64\lib-vc2019;del %USERPROFILE%\AppData\Local\Microsoft\MSBuild\v4.0\Microsoft.Cpp.Win32.user.props;C:\Users\cstmp\Desktop\Garage Software\opengl files\GLFW\glfw-3.3.6.bin.WIN64\include;$(LibraryPath)</LibraryPath>
-    <IncludePath>C:\Users\cstmp\Downloads\glm;C:\Users\cstmp\Desktop\Garage Software\opengl files\GLFW\glfw-3.3.6.bin.WIN64\lib-vc2019;C:\Users\cstmp\Desktop\Garage Software\opengl files\glad\include;C:\Users\cstmp\Desktop\Garage Software\opengl files\GLFW\glfw-3.3.6.bin.WIN64\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\cstmp\Downloads\freetype-2.9.1\include;C:\Users\cstmp\Downloads\glm;C:\Users\cstmp\Desktop\Garage Software\opengl files\GLFW\glfw-3.3.6.bin.WIN64\lib-vc2019;C:\Users\cstmp\Desktop\Garage Software\opengl files\glad\include;C:\Users\cstmp\Desktop\Garage Software\opengl files\GLFW\glfw-3.3.6.bin.WIN64\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -122,7 +122,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -144,6 +144,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\..\Desktop\Garage Software\opengl files\glad\src\glad.c" />
     <ClCompile Include="Source.cpp" />
+    <ClCompile Include="Source1.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stb_image.h" />
@@ -158,6 +159,9 @@
     <None Include="HTMLPage.htm">
       <DeploymentContent>true</DeploymentContent>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="..\..\..\..\Downloads\theme.mp3" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

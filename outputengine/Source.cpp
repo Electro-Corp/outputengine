@@ -8,6 +8,8 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 #include <iostream>
+#include <ft2build.h>
+#include FT_FREETYPE_H  
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -15,14 +17,25 @@
 #include <string>
 //#include <WinUser.h>
 #include <Windows.h>
-
+#include <vector>
+float newvert[180];
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
-
-
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+void cube(float x, float y, float z) {
+    for (int i = 0; i < x; i++) {
+        newvert[i] =x+i;
+    }
+    for (int i = 0; i < y; i++) {
+        newvert[i] = y + i;
+    }
+    for (int i = 0; i < z; i++) {
+        newvert[i] = z + i;
+    }
+   
+}
+const unsigned int SCR_WIDTH = 1080;
+const unsigned int SCR_HEIGHT = 720;
 
 glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
@@ -100,6 +113,7 @@ glm::vec3 cubePositions[] = {
 std::string name;
 int main()
 {
+    //cube(10, 3, 3);
     //glm
     MessageBox(NULL, "Enter the name of the texture to use (must be in C:/demo)", "Output Engine", MB_ICONINFORMATION | MB_OK);
     std::cout << "Image name: ";
@@ -148,7 +162,7 @@ int main()
         glEnable(GL_DEPTH_TEST);
     //vertice for triangle
     
-
+    
     unsigned int indices[] = {
       0, 1, 3, // first triangle
       1, 2, 3  // second triangle
@@ -221,7 +235,31 @@ int main()
     }
 
     stbi_image_free(data);
+    unsigned char* bruh = stbi_load("C:\\demo\\crude.jpg", &width, &height, &nrChannels, 0);
+    unsigned int source;
+    glGenTextures(1, &source);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glBindTexture(GL_TEXTURE_2D, source);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, bruh);
+    if (bruh)
+    {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, bruh);
+        glGenerateMipmap(GL_TEXTURE_2D);
+    }
+    else
+    {
+        std::cout << "Failed to load texture" << std::endl;
 
+        std::string error = "Texture Find Failure, Intro image not found! OH NO!";
+        const char* beef = error.c_str();
+        MessageBox(NULL, beef, "Output Engine", MB_ICONERROR | MB_OKCANCEL);
+
+    }
+
+    stbi_image_free(bruh);
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
     glEnableVertexAttribArray(2);
     //model matrix
@@ -288,10 +326,10 @@ int main()
         return -1;
     }
 
-
+    PlaySound(TEXT("C:\\demo\\theme.wav"), NULL, SND_FILENAME | SND_ASYNC);
     while (!glfwWindowShouldClose(window))
     {
-        
+
         processInput(window);
         glfwSetCursorPosCallback(window, mouse_callback);
 
@@ -309,7 +347,7 @@ int main()
         //view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
         projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
         // retrieve the matrix uniform locations
-       
+
         unsigned int modelLoc = glGetUniformLocation(ourShader.ID, "model");
         unsigned int viewLoc = glGetUniformLocation(ourShader.ID, "view");
         // pass them to the shaders (3 different ways)
@@ -326,9 +364,9 @@ int main()
 
 
         // bind Texture
-        glBindTexture(GL_TEXTURE_2D, texture);
+        glBindTexture(GL_TEXTURE_2D, source);
         // cam
-        
+
 
         //unsigned int transformLoc = glGetUniformLocation(ourShader.ID, "transform");
         //glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
@@ -337,6 +375,7 @@ int main()
         //glBindVertexArray(VAO);
         //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         glBindVertexArray(VAO);
+        glBindTexture(GL_TEXTURE_2D, texture);
         for (unsigned int i = 0; i < 10; i++)
         {
             glm::mat4 model = glm::mat4(1.0f);
@@ -344,10 +383,15 @@ int main()
             float angle = 20.0f * i;
             model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.9f));
             ourShader.setMat4("model", model);
+            model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.9f, 1.0f, 0.0f));
 
             glDrawArrays(GL_TRIANGLES, 0, 36);
 
         }
+       
+
+        glDrawArrays(GL_TRIANGLES, 0, 36);
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
         glfwSwapBuffers(window);
@@ -373,6 +417,7 @@ void processInput(GLFWwindow* window)
         cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+    
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
