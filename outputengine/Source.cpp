@@ -1,3 +1,8 @@
+/*
+* Output Engine...
+* Chinmay Tiwari 2022
+*/
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #define STB_IMAGE_IMPLEMENTATION
@@ -7,6 +12,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include "shader.h"
+#include <string>
 //#include <WinUser.h>
 #include <Windows.h>
 
@@ -91,10 +97,14 @@ glm::vec3 cubePositions[] = {
     glm::vec3(1.5f,  0.2f, -1.5f),
     glm::vec3(-1.3f,  1.0f, -1.5f)
 };
+std::string name;
 int main()
 {
     //glm
-    MessageBox(NULL, "Enter the name of the texture to use (must be in executable loc)", "Output Engine", MB_ICONINFORMATION | MB_OK);
+    MessageBox(NULL, "Enter the name of the texture to use (must be in C:/demo)", "Output Engine", MB_ICONINFORMATION | MB_OK);
+    std::cout << "Image name: ";
+    std::cin >> name;
+    if (name == "null") { name = "wall"; }
     
     glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
     glm::vec3 cameraDirection = glm::normalize(cameraPos - cameraTarget);
@@ -182,7 +192,10 @@ int main()
     glEnableVertexAttribArray(1);
     // TEXTURE!!!!
     int width, height, nrChannels;
-    unsigned char* data = stbi_load("C:\demo\wall.png", &width, &height, &nrChannels, 0);
+    name = "C:\\demo\\" + name + ".jpg"; 
+    const char* name2 = name.c_str();
+    unsigned char* data = stbi_load(name2, &width, &height, &nrChannels, 0);
+
     unsigned int texture;
     glGenTextures(1, &texture);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
