@@ -192,6 +192,7 @@ int main()
     glEnableVertexAttribArray(1);
     // TEXTURE!!!!
     int width, height, nrChannels;
+    std::string bef = name;
     name = "C:\\demo\\" + name + ".jpg"; 
     const char* name2 = name.c_str();
     unsigned char* data = stbi_load(name2, &width, &height, &nrChannels, 0);
@@ -212,7 +213,10 @@ int main()
     else
     {
         std::cout << "Failed to load texture" << std::endl;
-        MessageBox(NULL, "Texture Find Failure.", "Output Engine", MB_ICONERROR | MB_OKCANCEL);
+        
+        std::string error = "Texture Find Failure, " + bef + " not found!";
+        const char* beef = error.c_str();
+        MessageBox(NULL, beef, "Output Engine", MB_ICONERROR | MB_OKCANCEL);
 
     }
 
